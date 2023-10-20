@@ -14,8 +14,8 @@ WorldInfo {
   title "Omniscience"
 }
 Viewpoint {
-  orientation -0.6573472422495806 -0.006028163165976816 0.7535637095532902 3.161697391555735
-  position 1.8938767117712978 0.35226128887093466 7.9237485729284645
+  orientation -0.04878491881520813 0.9976098250255381 0.048935352340702225 1.5706391531378827
+  position 0.9495013859250249 1.8021257391817977 3.8392564017813093
 }
 TexturedBackground {
 }
@@ -251,6 +251,8 @@ DEF ROBOT1 Robot {
           ]
         }
       ]
+      recognition Recognition {
+      }
     }
   ]
   name "robot1"
@@ -470,6 +472,8 @@ DEF ROBOT2 Robot {
           ]
         }
       ]
+      recognition Recognition {
+      }
     }
   ]
   name "robot2"
@@ -689,6 +693,8 @@ DEF ROBOT3 Robot {
           ]
         }
       ]
+      recognition Recognition {
+      }
     }
   ]
   name "robot3"
@@ -724,7 +730,7 @@ RectangleArena {
   }
 }
 Solid {
-  translation 0.33 1 0
+  translation 0.35 1 0.05
   children [
     Shape {
       appearance Parquetry {
@@ -737,11 +743,9 @@ Solid {
   boundingObject Box {
     size 2.3 0.1 0.1
   }
-  physics Physics {
-  }
 }
 Solid {
-  translation -0.28 -0.95 0
+  translation -0.35 -0.95 0
   children [
     Shape {
       appearance Parquetry {
@@ -755,6 +759,26 @@ Solid {
   boundingObject Box {
     size 2.3 0.1 0.1
   }
-  physics Physics {
+  translationStep 0
+}
+Solid {
+  translation 1 1.5 0.05
+  children [
+    Shape {
+      appearance Parquetry {
+        colorOverride 1 0 0
+      }
+      geometry Box {
+        size 0.1 0.1 0.1
+      }
+    }
+  ]
+  name "solid(2)"
+  boundingObject Box {
+    size 0.1 0.1 0.1
   }
+  recognitionColors [
+    1 0 0
+    1 0 0
+  ]
 }
