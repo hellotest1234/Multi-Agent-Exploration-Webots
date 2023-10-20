@@ -1,0 +1,21 @@
+#VRML_SIM R2023b utf8
+PROTO Wall[
+
+]
+{
+	Solid {
+	  translation 0.33 1 0.05
+	  children [
+		Shape {
+		  appearance Parquetry {
+		  }
+		  geometry Box {
+			size 2.3 0.1 0.1
+		  }
+		}
+	  ]
+	  boundingObject Box {
+		size 2.3 0.1 0.1
+	  }
+	}
+}

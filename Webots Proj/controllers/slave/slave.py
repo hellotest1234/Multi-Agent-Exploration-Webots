@@ -35,15 +35,16 @@ class Slave(Robot):
     mode = Mode.AVOIDOBSTACLES
     motors = []
     distanceSensors = []
+    desiredV = [1,0]
 
     def boundSpeed(self, speed):
         return max(-self.maxSpeed, min(self.maxSpeed, speed))
-
     def __init__(self):
         super(Slave, self).__init__()
         self.mode = self.Mode.AVOIDOBSTACLES
         self.camera = self.getDevice('camera')
         self.camera.enable(4 * self.timeStep)
+        self.camera.recognitionEnable(4*self.timeStep)
         self.receiver = self.getDevice('receiver')
         self.receiver.enable(self.timeStep)
         self.motors.append(self.getDevice("left wheel motor"))
@@ -55,12 +56,14 @@ class Slave(Robot):
         for dsnumber in range(0, 2):
             self.distanceSensors.append(self.getDevice('ds' + str(dsnumber)))
             self.distanceSensors[-1].enable(self.timeStep)
-        
-        
+    
 
     def run(self):
         while True:
-            
+            object= self.camera.getRecognitionObjects()
+            if object:
+                print('found')
+                
             # Read the supervisor order.
             if self.receiver.getQueueLength() > 0:
                 

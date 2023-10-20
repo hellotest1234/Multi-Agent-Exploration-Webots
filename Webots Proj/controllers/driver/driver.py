@@ -36,12 +36,12 @@ class Driver (Supervisor):
         self.keyboard.enable(Driver.timeStep)
         self.keyboard = self.getKeyboard()
         self.target = [1,1.5]
+    
     def tol(self,c,t):
         if abs(c[0]-t[0])+abs(c[1]-t[1])<0.5:
             return True
         return False
-    def ex(tranf):
-        return [tranf.getSFVec3f()[0],tranf.getSFVec3f()[1]]
+    
     def run(self):
         self.displayHelp()
         previous_message = ''
@@ -65,12 +65,12 @@ class Driver (Supervisor):
                 message = 'random'
             elif k == ord('W'):
                 message = 'wall follow'
-            elif self.tol(self.translationField[0].getSFVec3f(),self.target):
-                message = 'stop'
-            elif self.tol(self.translationField[1].getSFVec3f(),self.target):
-                message = 'stop'
-            elif self.tol(self.translationField[2].getSFVec3f(),self.target):
-                message = 'stop'
+            #elif self.tol(self.translationField[0].getSFVec3f(),self.target):
+                #message = 'stop'
+            #elif self.tol(self.translationField[1].getSFVec3f(),self.target):
+                #message = 'stop'
+            #elif self.tol(self.translationField[2].getSFVec3f(),self.target):
+                #message = 'stop'
                 
             elif k == ord('G'):
                 translationValues = self.translationField[0].getSFVec3f()
