@@ -47,8 +47,8 @@ class Slave(Robot):
     prev_x_position = 0; prev_y_position = 0 # ADDED
     target_angle = 0 # ADDED
     stuck_counter = 0 #ADDED
-    random_x =  0.3 #random.uniform(-1, 1); 
-    random_y =  0.2 #random.uniform(-1, 1) 
+    random_x = -0.2#random.uniform(-1, 1); #0.2
+    random_y = -0.2#random.uniform(-1, 1) # 0.2
     position_list = [] #ADDED
     loop_counter = 0 #ADDED
     last_loop_position = [] #ADDED
@@ -297,19 +297,20 @@ class Slave(Robot):
             
             # Check if the target is in front of the robot.
             object= self.camera.getRecognitionObjects()
+            
             for obj in object:  
-                #print('robot1 found: ',obj.getId())
-                #print('robot1 current list: ',self.target_list)
+                #print('robot2 found: ',obj.getId())
+                #print('robot2 current list: ',self.target_list)
                 if obj.getId() not in self.target_list:   
                     self.target_list.append(obj.getId())
                     #print('found')
                     
-                    
+
                     found_target_message = obj.getId()
                     found_target_message = str(obj.getId()).encode('utf-8')
-                    self.emitter.setChannel(4)
+                    self.emitter.setChannel(2)
                     self.emitter.send(found_target_message)
-                
+
                 #else:
                     #print('target already found')
                     
@@ -324,18 +325,19 @@ class Slave(Robot):
                 combined_message = json.loads(received_message)  
 
                 # Extract position and control messages
-                position_message = combined_message["pose"]
+                position_message = combined_message["pose2"]
                 control_message = combined_message["control"]
                 target_message = combined_message["target"]
                 
 
                 # Handle the position message
-                x_pos = position_message["x"]; self.x_position = x_pos
-                y_pos = position_message["y"]; self.y_position = y_pos
-                theta = position_message["theta"];  self.theta = theta
+                x_pos = position_message["x2"]; self.x_position = x_pos
+                y_pos = position_message["y2"]; self.y_position = y_pos
+                theta = position_message["theta2"];  self.theta = theta
                 self.robot_angle_in_deg = abs(self.theta[3]/math.pi * 180)
                 self.target_list = target_message["target_list"]
-
+                
+                
                
                
             
@@ -346,8 +348,6 @@ class Slave(Robot):
                 self.receiver.nextPacket() 
                 if message != '':
                     print('I should ' + AnsiCodes.RED_FOREGROUND + message + AnsiCodes.RESET + '!')
-                #print('I am at'+ AnsiCodes.RED_FOREGROUND + str(x_pos) + ','+ str(y_pos) + AnsiCodes.RESET + '!')
-                #print(round(eul_angle[2],2))
                 if message == 'avoid obstacles':
                     self.mode = self.Mode.AVOIDOBSTACLES
                 elif message == 'move forward':
@@ -385,11 +385,11 @@ class Slave(Robot):
                 speeds[1] = -self.maxSpeed
                 if self.stuck_counter == 0:
                     self.mode = self.Mode.SGBA   
-                    print('switch to SGBA')
+                    #print('switch to SGBA')
             elif self.mode == self.Mode.STOP:
                 speeds[0] = 0
                 speeds[1] = 0
-                return 
+                return
             elif self.mode == self.Mode.TURN: # clockwise direction
                 speeds[0] = self.maxSpeed / 5
                 speeds[1] = -self.maxSpeed / 5                
@@ -432,7 +432,6 @@ class Slave(Robot):
                 # Get left and right sensor distances
                 left_dist = self.distanceSensors[0].getValue()
                 right_dist = self.distanceSensors[1].getValue()
-                #print("left: " + str(left_dist) + " right: " + str(right_dist))
 
                 # Proportional gain
                 Kp = -0.1
@@ -446,7 +445,7 @@ class Slave(Robot):
                 #print('stuck counter: ',self.stuck_counter)
                 if abs(self.x_position - self.prev_position[0]) < 0.001 and abs(self.y_position - self.prev_position[1]) < 0.001:
                     self.stuck_counter+=1
-                elif left_dist > 800 or right_dist > 800: # MAYBE CHANGE THIS VALUES FOR BETTER COLLISION AVOIDANCE 
+                elif left_dist > 800 or right_dist > 800:
                     self.stuck_counter += 1
                 else: 
                     self.stuck_counter = 0
@@ -504,13 +503,11 @@ class Slave(Robot):
                         
                         speeds[0] = self.boundSpeed(self.maxSpeed/2 + 2*correction)
                         speeds[1] = self.boundSpeed(self.maxSpeed/2 - 2*correction)
-                        #print(self.boundSpeed(self.maxSpeed/2),self.boundSpeed(self.maxSpeed/2 - correction))
                             
                     elif self.prev_sensor_readings[0] == 0 and self.prev_sensor_readings[1] != 0: # right sensor detect
                         self.counter +=1
                         speeds[0] = self.boundSpeed(self.maxSpeed/2 - 2*correction)
-                        speeds[1] = self.boundSpeed(self.maxSpeed/2 + 2*correction)
-                        #print(speeds)   
+                        speeds[1] = self.boundSpeed(self.maxSpeed/2 + 2*correction)  
                     
                     else:  # move forward
                         speeds[0] = self.maxSpeed/2
@@ -528,11 +525,9 @@ class Slave(Robot):
                 elif  self.target_angle > 0 and  self.target_angle <= 90: # 4th quad
                     target_angle1 =  self.target_angle
 
-              
                 if abs(self.robot_angle_in_deg - target_angle1) <=3 and left_dist == 0 and right_dist == 0: #and left_dist <= 5 and right_dist <= 5:
                     self.mode = self.Mode.SGBA   
-                    print('switch to SGBA')
-                
+                    #print('switch to SGBA')
                      
             elif self.mode == self.Mode.SGBA:
                 #print('SGBA MODE')
@@ -541,11 +536,10 @@ class Slave(Robot):
                 # Get left and right sensor distances
                 left_dist = self.distanceSensors[0].getValue()
                 right_dist = self.distanceSensors[1].getValue()
-                
                
                 # Get the next the coordinate and angle the robot should head towards
                 updated_x, updated_y = self.path_planner(self.x_position,self.y_position, self.random_x, self.random_y)
-                self.target_angle = self.calculate_target_angle_wrt_base(updated_x, updated_y)         
+                self.target_angle = self.calculate_target_angle_wrt_base(updated_x, updated_y)
 
 
 
@@ -560,16 +554,14 @@ class Slave(Robot):
                     target_angle1 =  self.target_angle
                     
 
-                
+             
                 # Rotate robot to face target
                 diff_angle = self.robot_angle_in_deg - target_angle1
-
                 if abs(diff_angle) > 2: # not facing right direction
                     #print('wrong angle')
                     speeds = self.rotate_to_face_target(self.target_angle, speeds)
 
                 elif abs(diff_angle) <= 3: # facing right direction 
-
 
                     # path is clear and move forward
                     if left_dist == 0 and right_dist == 0: # and any(item == 0 for item in self.prev_sensor_readings):   
@@ -587,6 +579,7 @@ class Slave(Robot):
                                     #print('same position detected')
                                     self.position_list = self.position_list[index+1:]
                                     self.loop_counter += 1
+                                    #print('position list length: ', len(self.position_list))
                                     print('loop counter: ', self.loop_counter)
                                     self.last_loop_position = [self.x_position, self.y_position]
                                     if self.loop_counter > 0:
@@ -595,14 +588,14 @@ class Slave(Robot):
                                         self.loop_counter = 0
                                     break
 
-                                    
 
                     # path not clear
                     else: 
                         #print('path not clear')
+                        #print(left_dist,right_dist)
 
                         if left_dist > 0 or right_dist> 0: # obstacle detected, do wall-following  
-                            print('Switch to OBSTACLEFOLLOW')
+                            #print('Switch to OBSTACLEFOLLOW')
                             
                             self.mode = self.Mode.OBSTACLEFOLLOW
                             self.motors[0].setVelocity(speeds[0])
@@ -619,6 +612,7 @@ class Slave(Robot):
             if self.counter == 0 or self.counter == 100:
                 self.counter = 0
                 self.prev_sensor_readings = [self.distanceSensors[0].getValue(), self.distanceSensors[1].getValue()] # ADDED
+                #print(self.prev_sensor_readings)
 
             # Save previous position 
             self.prev_position = [self.x_position, self.y_position]  
@@ -640,7 +634,6 @@ class Slave(Robot):
             if self.mode != self.Mode.SGBA:
                 self.motors[0].setVelocity(speeds[0])
                 self.motors[1].setVelocity(speeds[1])
-                #print(speeds)
            
 
             # Perform a simulation step, quit the loop when

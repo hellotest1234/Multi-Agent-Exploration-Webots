@@ -20,31 +20,50 @@ message through an emitter or handle the position of Robot1.
 
 from controller import Supervisor
 from common import common_print
+import json
+import math 
 
 
 class Driver (Supervisor):
-    timeStep = 128
+    timeStep = 64
     x = -0.3
     y = -0.1
     translation = [x, y, 0]
+    time_interval = 0 # ADDED
+    counter = 0 # ADDED
+    target_list = [] # ADDED
 
     def __init__(self):
         super(Driver, self).__init__()
         self.emitter = self.getDevice('emitter')
-        robot = [self.getFromDef('ROBOT1'),self.getFromDef('ROBOT2'),self.getFromDef('ROBOT2')]
-        self.translationField = [robot[0].getField('translation'),robot[1].getField('translation'),robot[2].getField('translation')]
+        self.pos_emitter = self.getDevice('emitter')
+        self.receiver = self.getDevice('receiver')
+        self.receiver2 = self.getDevice('receiver2')
+        self.receiver3 = self.getDevice('receiver3')
+        self.receiver.enable(self.timeStep)
+        self.receiver2.enable(self.timeStep)
+        self.receiver3.enable(self.timeStep)
+        
+
+        # Define robot and sensor readings
+        robot = [self.getFromDef('ROBOT1'), self.getFromDef('ROBOT2'), self.getFromDef('ROBOT3')]
+        self.translationField = [robot[0].getField('translation') , robot[1].getField('translation'), robot[2].getField('translation')]
+        self.rotationField = [robot[0].getField('rotation'), robot[1].getField('rotation'),robot[2].getField('rotation')]
         self.keyboard.enable(Driver.timeStep)
         self.keyboard = self.getKeyboard()
-        self.target = [1,1.5]
-    
+
+    # Determine whether robot has reached the target position within a certain tolerance.  
     def tol(self,c,t):
         if abs(c[0]-t[0])+abs(c[1]-t[1])<0.5:
             return True
         return False
     
+    # Run the controller
     def run(self):
         self.displayHelp()
         previous_message = ''
+
+        
 
         # Main loop.
         while True:
@@ -55,6 +74,8 @@ class Driver (Supervisor):
                 message = 'avoid obstacles'
             elif k == ord('F'):
                 message = 'move forward'
+            elif k == ord('D'):
+                message = 'move backward'
             elif k == ord('S'):
                 message = 'stop'
             elif k == ord('T'):
@@ -65,31 +86,94 @@ class Driver (Supervisor):
                 message = 'random'
             elif k == ord('W'):
                 message = 'wall follow'
-            #elif self.tol(self.translationField[0].getSFVec3f(),self.target):
-                #message = 'stop'
-            #elif self.tol(self.translationField[1].getSFVec3f(),self.target):
-                #message = 'stop'
-            #elif self.tol(self.translationField[2].getSFVec3f(),self.target):
-                #message = 'stop'
-                
-            elif k == ord('G'):
-                translationValues = self.translationField[0].getSFVec3f()
+            elif k == ord('O'):
+                message = 'obstacle follow'
+            elif k == ord('B'):
+                message = 'sgba'
+            elif k == ord('G'): # show position of ROBOT1
                 print('ROBOT1 is located at (' + str(translationValues[0]) + ',' + str(translationValues[1]) + ')')
-            elif k == ord('R'):
-                print('Teleport ROBOT1 at (' + str(self.x) + ',' + str(self.y) + ')')
-                self.translationField.setSFVec3f(self.translation)
 
-            # Send a new message through the emitter device.
+
+        #########################  SENDING OF MESSAGES VIA EMITTER  ##############################                 
+
+            # Allows 'driver' to send new message to 'slave' robots
             if message != '' and message != previous_message:
                 previous_message = message
                 print('Please, ' + message)
-                self.emitter.send(message.encode('utf-8'))
+
+            # Send the position message if the counter reaches the desired time interval
+            self.counter+=1
+            if self.counter >= self.time_interval:
+                self.counter = 0  # Reset the counter
+                translationValues = self.translationField[0].getSFVec3f() # calculate global position
+                rotationalValues = self.rotationField[0].getSFRotation()
+                translationValues2 = self.translationField[1].getSFVec3f() # calculate global position
+                rotationalValues2 = self.rotationField[1].getSFRotation()
+                translationValues3 = self.translationField[2].getSFVec3f() # calculate global position
+                rotationalValues3 = self.rotationField[2].getSFRotation()
+
+                
+
+            # combined message for robot 1
+            combined_message = {
+                "pose": {
+                "x": translationValues[0],
+                "y": translationValues[1],
+                "theta": rotationalValues
+            },
+            "control": {
+                "message": message
+            },
+            "pose2": {
+                "x2": translationValues2[0],
+                "y2": translationValues2[1],
+                "theta2": rotationalValues2
+            },
+            "pose3": {
+                "x3": translationValues3[0],
+                "y3": translationValues3[1],
+                "theta3": rotationalValues3
+            },
+            "target": {
+                "target_list": self.target_list
+            }}
+            self.emitter.send(json.dumps(combined_message).encode('utf-8'))
+            
+            
+        ####################################################################################
+
+
+            # Receive the target id
+            if self.receiver.getQueueLength() > 0: 
+                self.receiver.setChannel(4)
+                received_message = self.receiver.getString()
+                if int(received_message) not in self.target_list:
+                    self.target_list.append(int(received_message))
+                    print('driver updated list: ', self.target_list) 
+
+                    
+            if self.receiver2.getQueueLength() > 0: 
+                self.receiver2.setChannel(2)
+                received_message = self.receiver2.getString()
+                if int(received_message) not in self.target_list:
+                    self.target_list.append(int(received_message))
+                    print('driver updated list: ', self.target_list) 
+            
+            if self.receiver3.getQueueLength() > 0: 
+                self.receiver3.setChannel(3)
+                received_message = self.receiver3.getString()
+                if int(received_message) not in self.target_list:
+                    self.target_list.append(int(received_message))
+                    print('driver updated list: ', self.target_list) 
+
+            
 
             # Perform a simulation step, quit the loop when
             # Webots is about to quit.
             if self.step(self.timeStep) == -1:
                 break
-
+    
+    # Display all user commands
     def displayHelp(self):
         print(
             'Commands:\n'
@@ -98,11 +182,13 @@ class Driver (Supervisor):
             ' F for move forward\n'
             ' S for stop\n'
             ' T for turn\n'
-            ' R for positioning ROBOT1 at (-0.3,-0.1)\n'
+            ' R for random\n'
+            ' W for wall follow\n'
+            ' O for obstacle follow\n'
             ' G for knowing the (x,y) position of ROBOT1'
         )
 
 
-controller = Driver()
-common_print('driver')
+controller = Driver() # create instance of the controller
+common_print('driver') # print info about controller
 controller.run()
