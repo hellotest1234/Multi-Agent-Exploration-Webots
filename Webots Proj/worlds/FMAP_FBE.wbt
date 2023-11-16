@@ -2,7 +2,6 @@
 
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/factory/containers/protos/WoodenBox.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/RectangleArena.proto"
 IMPORTABLE EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/animals/protos/Cow.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/Parquetry.proto"
@@ -14,46 +13,19 @@ WorldInfo {
   title "Omniscience"
 }
 Viewpoint {
-  orientation -0.04878491881520813 0.9976098250255381 0.048935352340702225 1.5706391531378827
-  position 0.9495013859250249 1.8021257391817977 3.8392564017813093
+  orientation -0.5773502691896258 0.5773502691896258 0.5773502691896258 2.0944
+  position 1.5002065136039442 2.0000007645423086 13.737994316732472
 }
 TexturedBackground {
 }
 TexturedBackgroundLight {
 }
-WoodenBox {
-  translation -0.372612 0.06339 0.05
-  rotation 0 0 1 0.5
-  size 0.1 0.1 0.1
-}
-WoodenBox {
-  translation 0.421524 -0.431299 0.05
-  rotation 0 0 1 4.96782
-  name "wooden box(1)"
-  size 0.1 0.1 0.1
-}
-WoodenBox {
-  translation -0.35471 -0.5 0.05
-  rotation 0 0 1 5.36782
-  name "wooden box(2)"
-  size 0.1 0.1 0.1
-}
-WoodenBox {
-  translation 0.36 0.3 0.05
-  rotation 0 0 1 5.36782
-  name "wooden box(3)"
-  size 0.1 0.1 0.1
-}
-WoodenBox {
-  translation -0.166689 0.612227 0.05
-  rotation 0 0 1 5.36782
-  name "wooden box(4)"
-  size 0.1 0.1 0.1
-}
 DEF ROBOT1 Robot {
-  translation 1.3 -1.3 0
-  rotation 0 0 -1 0.221754
+  translation 0.125 0.125 0
+  rotation 0 0 -1 0
   children [
+    Emitter {
+    }
     DEF MAIN_BODY Pose {
       translation 0 0 0.0415
       children [
@@ -84,7 +56,7 @@ DEF ROBOT1 Robot {
         }
       ]
       endPoint DEF LEFT_WHEEL Solid {
-        translation 0 0.04500000000000001 0.025
+        translation 0 0.04499999999999982 0.025
         rotation 0 -1 0 4.984670000000001
         children [
           DEF WHEEL Pose {
@@ -141,8 +113,8 @@ DEF ROBOT1 Robot {
         }
       ]
       endPoint DEF RIGHT_WHEEL Solid {
-        translation 0 -0.04500000000000001 0.025
-        rotation 0 -1 0 4.58735
+        translation 0 -0.04499999999999964 0.025
+        rotation 0 -0.9999999999999999 0 4.587350000000001
         children [
           DEF WHEEL Pose {
             rotation -1 0 0 1.57
@@ -194,10 +166,10 @@ DEF ROBOT1 Robot {
       lookupTable [
         0 1024 0
         0.05 1024 0
-        0.15 0 0
+        0.3 0 0
       ]
       numberOfRays 2
-      aperture 1
+      aperture 0.3
     }
     DEF RIGHT_EYE DistanceSensor {
       translation 0.042 -0.02 0.063
@@ -224,10 +196,10 @@ DEF ROBOT1 Robot {
       lookupTable [
         0 1024 0
         0.05 1024 0
-        0.15 0 0
+        0.3 0 0
       ]
       numberOfRays 2
-      aperture 1
+      aperture 0.3
     }
     Receiver {
     }
@@ -252,6 +224,7 @@ DEF ROBOT1 Robot {
         }
       ]
       recognition Recognition {
+        maxRange 0.3
       }
     }
   ]
@@ -269,12 +242,21 @@ DEF ROBOT1 Robot {
     density -1
     mass 0.5
   }
-  controller "slave"
+  recognitionColors [
+    0 1 0
+  ]
+  controller "fbeAgent"
+  controllerArgs [
+    "0"
+    "0"
+    "A1"
+  ]
 }
 DEF ROBOT2 Robot {
-  translation 1.3 -1.5 0
-  rotation 0 0 -1 2.67372
+  translation 0.125 0.375 0
   children [
+    Emitter {
+    }
     DEF MAIN_BODY Pose {
       translation 0 0 0.0415
       children [
@@ -415,10 +397,10 @@ DEF ROBOT2 Robot {
       lookupTable [
         0 1024 0
         0.05 1024 0
-        0.15 0 0
+        0.3 0 0
       ]
       numberOfRays 2
-      aperture 1
+      aperture 0.3
     }
     DEF RIGHT_EYE DistanceSensor {
       translation 0.042 -0.02 0.063
@@ -445,10 +427,10 @@ DEF ROBOT2 Robot {
       lookupTable [
         0 1024 0
         0.05 1024 0
-        0.15 0 0
+        0.3 0 0
       ]
       numberOfRays 2
-      aperture 1
+      aperture 0.3
     }
     Receiver {
     }
@@ -473,6 +455,7 @@ DEF ROBOT2 Robot {
         }
       ]
       recognition Recognition {
+        maxRange 0.3
       }
     }
   ]
@@ -490,12 +473,21 @@ DEF ROBOT2 Robot {
     density -1
     mass 0.5
   }
-  controller "slave"
+  recognitionColors [
+    0 1 0
+  ]
+  controller "fbeAgent"
+  controllerArgs [
+    "0"
+    "0.25"
+    "A2"
+  ]
 }
 DEF ROBOT3 Robot {
-  translation 1.3 -1.7 0
-  rotation 0 0 1 2.54759
+  translation 0.125 0.625 0
   children [
+    Emitter {
+    }
     DEF MAIN_BODY Pose {
       translation 0 0 0.0415
       children [
@@ -636,10 +628,10 @@ DEF ROBOT3 Robot {
       lookupTable [
         0 1024 0
         0.05 1024 0
-        0.15 0 0
+        0.3 0 0
       ]
       numberOfRays 2
-      aperture 1
+      aperture 0.3
     }
     DEF RIGHT_EYE DistanceSensor {
       translation 0.042 -0.02 0.063
@@ -666,10 +658,10 @@ DEF ROBOT3 Robot {
       lookupTable [
         0 1024 0
         0.05 1024 0
-        0.15 0 0
+        0.3 0 0
       ]
       numberOfRays 2
-      aperture 1
+      aperture 0.3
     }
     Receiver {
     }
@@ -694,6 +686,7 @@ DEF ROBOT3 Robot {
         }
       ]
       recognition Recognition {
+        maxRange 0.3
       }
     }
   ]
@@ -711,58 +704,50 @@ DEF ROBOT3 Robot {
     density -1
     mass 0.5
   }
-  controller "slave"
+  recognitionColors [
+    0 1 0
+  ]
+  controller "fbeAgent"
+  controllerArgs [
+    "0"
+    "0.5"
+    "A3"
+  ]
 }
 Robot {
   children [
+    Receiver {
+    }
     Emitter {
     }
   ]
   name "Driver"
-  controller "driver"
+  controller "fbeDriver"
+  supervisor TRUE
+}
+Robot {
+  translation 0.1 0 0.1
+  children [
+    Receiver {
+    }
+    Emitter {
+    }
+  ]
+  name "Driver(1)"
+  controller "Eval"
   supervisor TRUE
 }
 RectangleArena {
+  translation 1.5 2 0
   floorSize 3 4
   floorAppearance Parquetry {
-    type "light strip"
-    colorOverride 1 1 0.3
+    type "chequered"
+    colorOverride 0.7 0.7 0.4
   }
 }
-Solid {
-  translation 0.35 1 0.05
-  children [
-    Shape {
-      appearance Parquetry {
-      }
-      geometry Box {
-        size 2.3 0.1 0.1
-      }
-    }
-  ]
-  boundingObject Box {
-    size 2.3 0.1 0.1
-  }
-}
-Solid {
-  translation -0.35 -0.95 0
-  children [
-    Shape {
-      appearance Parquetry {
-      }
-      geometry Box {
-        size 2.3 0.1 0.1
-      }
-    }
-  ]
-  name "solid(1)"
-  boundingObject Box {
-    size 2.3 0.1 0.1
-  }
-  translationStep 0
-}
-Solid {
-  translation 1 1.5 0.05
+DEF Target Solid {
+  translation 0.12 3.88 0.0475487
+  rotation 0.2098246965380985 -0.07537695612994462 0.9748291702689654 8.612038287936004e-17
   children [
     Shape {
       appearance Parquetry {
@@ -775,10 +760,201 @@ Solid {
   ]
   name "solid(2)"
   boundingObject Box {
-    size 0.1 0.1 0.1
+    size 0.25 0.25 0.1
+  }
+  physics Physics {
   }
   recognitionColors [
     1 0 0
+  ]
+}
+DEF Target Solid {
+  translation 0.63 1.14 0.0475487
+  rotation 0.2098246965380985 -0.07537695612994462 0.9748291702689654 8.612038287936004e-17
+  children [
+    Shape {
+      appearance Parquetry {
+        colorOverride 1 0 0
+      }
+      geometry Box {
+        size 0.1 0.1 0.1
+      }
+    }
+  ]
+  name "solid(9)"
+  boundingObject Box {
+    size 0.25 0.25 0.1
+  }
+  physics Physics {
+  }
+  recognitionColors [
     1 0 0
   ]
+}
+DEF Wall Solid {
+  translation 0.61602 0.879946 0.0363955
+  rotation 0.4049495474881417 0.9135595333925779 -0.03774709176459643 0.0017559996147847312
+  children [
+    Shape {
+      appearance Parquetry {
+        type "light strip"
+        IBLStrength 5
+      }
+      geometry Box {
+        size 1.25 0.25 0.1
+      }
+    }
+  ]
+  boundingObject Box {
+    size 1.25 0.25 0.1
+  }
+  physics Physics {
+  }
+}
+DEF Wall6 Solid {
+  translation 0.126077 2.88 0.0475488
+  rotation -1.3744607782957373e-13 -2.9838662215540703e-13 -1 6.975172692854892e-05
+  children [
+    Shape {
+      appearance Parquetry {
+        type "light strip"
+        IBLStrength 5
+      }
+      geometry Box {
+        size 0.25 0.25 0.1
+      }
+    }
+  ]
+  name "solid(6)"
+  boundingObject Box {
+    size 0.25 0.25 0.1
+  }
+  physics Physics {
+  }
+}
+DEF Wall2 Solid {
+  translation 1.37375 1.62042 0.0328328
+  rotation 5.597536686859165e-07 5.459657122191976e-07 0.9999999999996944 1.5708826506408582
+  children [
+    Shape {
+      appearance Parquetry {
+        type "light strip"
+        IBLStrength 5
+      }
+      geometry Box {
+        size 1.75 0.25 0.1
+      }
+    }
+  ]
+  name "solid(1)"
+  boundingObject Box {
+    size 1.75 0.25 0.1
+  }
+  physics Physics {
+  }
+}
+DEF Wall5 Solid {
+  translation 0.886883 3.38 0.0352855
+  rotation -0.5774405236777417 -0.5773051366542548 0.5773051366542548 2.094259725951922
+  children [
+    Shape {
+      appearance Parquetry {
+        type "light strip"
+        IBLStrength 5
+      }
+      geometry Box {
+        size 1.25 0.1 0.25
+      }
+    }
+  ]
+  name "solid(5)"
+  boundingObject Box {
+    size 1.25 0.1 0.25
+  }
+  physics Physics {
+  }
+}
+DEF Wall8 Solid {
+  translation 2.870131520025151 3.119778198444249 0.04754794551929944
+  rotation -1.5359196218148586e-08 1.815942030732339e-08 0.9999999999999999 3.13917842670979
+  children [
+    Shape {
+      appearance Parquetry {
+        type "light strip"
+        IBLStrength 5
+      }
+      geometry Box {
+        size 0.25 0.25 0.1
+      }
+    }
+  ]
+  name "solid(7)"
+  boundingObject Box {
+    size 0.25 0.25 0.1
+  }
+  physics Physics {
+  }
+}
+DEF Wall7 Solid {
+  translation 2.1300000000045674 3.498380000037073 0.04019061202058774
+  rotation 6.235599393345997e-14 4.584109259974382e-14 -0.9999999999999999 1.5707995090355333
+  children [
+    Shape {
+      appearance Parquetry {
+        type "light strip"
+        IBLStrength 5
+      }
+      geometry Box {
+        size 1 0.25 0.1
+      }
+    }
+  ]
+  name "solid(8)"
+  boundingObject Box {
+    size 1 0.25 0.1
+  }
+  physics Physics {
+  }
+}
+DEF Wall3 Solid {
+  translation 2.3694466974476946 1.7499198208514728 0.03528553861094465
+  rotation 1.9182082658564068e-07 -1.9227848039626286e-07 -0.999999999999963 1.5698635936715273
+  children [
+    Shape {
+      appearance Parquetry {
+        type "light strip"
+        IBLStrength 5
+      }
+      geometry Box {
+        size 1.5 0.25 0.1
+      }
+    }
+  ]
+  name "solid(3)"
+  boundingObject Box {
+    size 1.5 0.25 0.1
+  }
+  physics Physics {
+  }
+}
+DEF Wall4 Solid {
+  translation 2.7484850174123268 2.370025212261903 0.04509598600488679
+  rotation -0.00665007343010335 0.006417570633218186 -0.9999572947434016 6.0708347861991046e-06
+  children [
+    Shape {
+      appearance Parquetry {
+        type "light strip"
+        IBLStrength 5
+      }
+      geometry Box {
+        size 0.5 0.25 0.1
+      }
+    }
+  ]
+  name "solid(4)"
+  boundingObject Box {
+    size 0.5 0.25 0.1
+  }
+  physics Physics {
+  }
 }
