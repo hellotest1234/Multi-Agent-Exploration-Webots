@@ -1,0 +1,1025 @@
+#VRML_SIM R2023b utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/RectangleArena.proto"
+IMPORTABLE EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/animals/protos/Cow.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/Parquetry.proto"
+IMPORTABLE EXTERNPROTO "../protos/Wall.proto"
+
+WorldInfo {
+  info [
+    "The user drives a Supervisor by the Keyboard which drives slaves robots by using an emitter device."
+  ]
+  title "Omniscience"
+}
+Viewpoint {
+  orientation -0.5797552973178385 0.5754233489425592 0.57686373150306 2.101610245323344
+  position 1.4704329664810856 1.586699520502845 8.558108570800501
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+DEF ROBOT1 Robot {
+  translation 0.39999983296444835 0.400000009480887 -0.00022713040408993412
+  rotation 0.00018989959520099726 -0.9999999819559565 5.121570728996761e-06 0.0284611414339717
+  children [
+    DEF driver_emitter Emitter {
+      name "driver_emitter"
+      channel 4
+      allowedChannels [
+        4
+      ]
+    }
+    DEF MAIN_BODY Pose {
+      translation 0 0 0.0415
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.0820075 0.364731 0.8
+            roughness 1
+            metalness 0
+          }
+          geometry DEF BODY Cylinder {
+            height 0.08
+            radius 0.045
+          }
+        }
+      ]
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        position 13754.81092638946
+        axis 0 1 0
+        anchor 0 0 0.025
+      }
+      device [
+        RotationalMotor {
+          name "left wheel motor"
+        }
+        PositionSensor {
+          name "left wheel sensor"
+        }
+      ]
+      endPoint DEF LEFT_WHEEL Solid {
+        translation 0 0.04499999999999893 0.025
+        rotation 0 0.9999999999999999 0 2.216804280525079
+        children [
+          DEF WHEEL Pose {
+            rotation -1 0 0 1.57
+            children [
+              Shape {
+                appearance PBRAppearance {
+                  baseColor 1 0 0
+                  roughness 1
+                  metalness 0
+                }
+                geometry Cylinder {
+                  height 0.01
+                  radius 0.025
+                }
+              }
+            ]
+          }
+        ]
+        name "left wheel"
+        boundingObject DEF WHEEL Pose {
+          rotation -1 0 0 1.57
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 1 0 0
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.01
+                radius 0.025
+              }
+            }
+          ]
+        }
+        physics DEF PHYSICS_WHEEL Physics {
+          density -1
+          mass 0.05
+        }
+      }
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        position 16280.614952491453
+        axis 0 1 0
+        anchor 0 0 0.025
+      }
+      device [
+        RotationalMotor {
+          name "right wheel motor"
+        }
+        PositionSensor {
+          name "right wheel sensor"
+        }
+      ]
+      endPoint DEF RIGHT_WHEEL Solid {
+        translation 0 -0.04499999999999757 0.025
+        rotation 0 1 0 2.57765689632367
+        children [
+          DEF WHEEL Pose {
+            rotation -1 0 0 1.57
+            children [
+              Shape {
+                appearance PBRAppearance {
+                  baseColor 1 0 0
+                  roughness 1
+                  metalness 0
+                }
+                geometry Cylinder {
+                  height 0.01
+                  radius 0.025
+                }
+              }
+            ]
+          }
+        ]
+        name "right wheel"
+        boundingObject USE WHEEL
+        physics DEF PHYSICS_WHEEL Physics {
+          density -1
+          mass 0.05
+        }
+      }
+    }
+    DEF LEFT_EYE DistanceSensor {
+      translation 0.042 0.02 0.063
+      rotation 0 0 -1 -0.499205
+      children [
+        DEF INFRARED Pose {
+          rotation 0.577656895078166 0.5771968951617173 -0.5771968951617173 -2.093935
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.975691 0.981481 0.0252992
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.004
+                radius 0.008
+              }
+            }
+          ]
+        }
+      ]
+      name "ds0"
+      lookupTable [
+        0 1000 0
+        0.15 500 0
+        0.3 0 0
+      ]
+      numberOfRays 2
+      aperture 1
+    }
+    DEF RIGHT_EYE DistanceSensor {
+      translation 0.042 -0.02 0.063
+      rotation 0 0 1 -0.500795
+      children [
+        DEF INFRARED Pose {
+          rotation 0.577656895078166 0.5771968951617173 -0.5771968951617173 -2.093935
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.975691 0.981481 0.0252992
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.004
+                radius 0.008
+              }
+            }
+          ]
+        }
+      ]
+      name "ds1"
+      lookupTable [
+        0 1000 0
+        0.15 500 0
+        0.3 0 0
+      ]
+      numberOfRays 2
+      aperture 1
+    }
+    Receiver {
+    }
+    Camera {
+      translation 0.045 0 0.045
+      children [
+        Pose {
+          rotation 0 -1 0 1.57
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.8 0.8 0.8
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.01
+                radius 0.007
+              }
+            }
+          ]
+        }
+      ]
+      fieldOfView 0.78
+      recognition Recognition {
+        maxRange 0.3
+      }
+    }
+  ]
+  name "robot1"
+  boundingObject DEF MYBOT_BOUNDING Pose {
+    translation 0 0 0.0415
+    children [
+      DEF BODY Cylinder {
+        height 0.08
+        radius 0.045
+      }
+    ]
+  }
+  physics DEF MYBOT_PHYSICS Physics {
+    density -1
+    mass 0.5
+  }
+  controller "slave"
+}
+DEF ROBOT2 Robot {
+  translation 0.4221903251515 0.09666800090674167 -0.0002271316835827722
+  rotation 2.8669814409259685e-05 -0.999999999588892 -5.07707402002896e-07 0.02846109959258865
+  children [
+    DEF driver_emitter Emitter {
+      name "driver_emitter"
+      channel 2
+      allowedChannels [
+        2
+      ]
+    }
+    DEF MAIN_BODY Pose {
+      translation 0 0 0.0415
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.0820075 0.364731 0.8
+            roughness 1
+            metalness 0
+          }
+          geometry DEF BODY Cylinder {
+            height 0.08
+            radius 0.045
+          }
+        }
+      ]
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        position 14050.630655021567
+        axis 0 1 0
+        anchor 0 0 0.025
+      }
+      device [
+        RotationalMotor {
+          name "left wheel motor"
+        }
+        PositionSensor {
+          name "left wheel sensor"
+        }
+      ]
+      endPoint DEF LEFT_WHEEL Solid {
+        translation 0 0.045000000000001046 0.025
+        rotation 0 -1 0 3.556361831988583
+        children [
+          DEF WHEEL Pose {
+            rotation -1 0 0 1.57
+            children [
+              Shape {
+                appearance PBRAppearance {
+                  baseColor 1 0 0
+                  roughness 1
+                  metalness 0
+                }
+                geometry Cylinder {
+                  height 0.01
+                  radius 0.025
+                }
+              }
+            ]
+          }
+        ]
+        name "left wheel"
+        boundingObject DEF WHEEL Pose {
+          rotation -1 0 0 1.57
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 1 0 0
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.01
+                radius 0.025
+              }
+            }
+          ]
+        }
+        physics DEF PHYSICS_WHEEL Physics {
+          density -1
+          mass 0.05
+        }
+      }
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        position 16586.762872318774
+        axis 0 1 0
+        anchor 0 0 0.025
+      }
+      device [
+        RotationalMotor {
+          name "right wheel motor"
+        }
+        PositionSensor {
+          name "right wheel sensor"
+        }
+      ]
+      endPoint DEF RIGHT_WHEEL Solid {
+        translation 0 -0.0449999999999976 0.025
+        rotation 0 -1 0 5.433688635334708
+        children [
+          DEF WHEEL Pose {
+            rotation -1 0 0 1.57
+            children [
+              Shape {
+                appearance PBRAppearance {
+                  baseColor 1 0 0
+                  roughness 1
+                  metalness 0
+                }
+                geometry Cylinder {
+                  height 0.01
+                  radius 0.025
+                }
+              }
+            ]
+          }
+        ]
+        name "right wheel"
+        boundingObject USE WHEEL
+        physics DEF PHYSICS_WHEEL Physics {
+          density -1
+          mass 0.05
+        }
+      }
+    }
+    DEF LEFT_EYE DistanceSensor {
+      translation 0.042 0.02 0.063
+      rotation 0 0 -1 -0.499205
+      children [
+        DEF INFRARED Pose {
+          rotation 0.577656895078166 0.5771968951617173 -0.5771968951617173 -2.093935
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.975691 0.981481 0.0252992
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.004
+                radius 0.008
+              }
+            }
+          ]
+        }
+      ]
+      name "ds0"
+      lookupTable [
+        0 1000 0
+        0.15 500 0
+        0.3 0 0
+      ]
+      numberOfRays 2
+      aperture 1
+    }
+    DEF RIGHT_EYE DistanceSensor {
+      translation 0.042 -0.02 0.063
+      rotation 0 0 1 -0.500795
+      children [
+        DEF INFRARED Pose {
+          rotation 0.577656895078166 0.5771968951617173 -0.5771968951617173 -2.093935
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.975691 0.981481 0.0252992
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.004
+                radius 0.008
+              }
+            }
+          ]
+        }
+      ]
+      name "ds1"
+      lookupTable [
+        0 1000 0
+        0.15 500 0
+        0.3 0 0
+      ]
+      numberOfRays 2
+      aperture 1
+    }
+    Receiver {
+    }
+    Camera {
+      translation 0.045 0 0.045
+      children [
+        Pose {
+          rotation 0 -1 0 1.57
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.8 0.8 0.8
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.01
+                radius 0.007
+              }
+            }
+          ]
+        }
+      ]
+      fieldOfView 0.78
+      recognition Recognition {
+        maxRange 0.3
+      }
+    }
+  ]
+  name "robot2"
+  boundingObject DEF MYBOT_BOUNDING Pose {
+    translation 0 0 0.0415
+    children [
+      DEF BODY Cylinder {
+        height 0.08
+        radius 0.045
+      }
+    ]
+  }
+  physics DEF MYBOT_PHYSICS Physics {
+    density -1
+    mass 0.5
+  }
+  controller "slave2"
+}
+DEF ROBOT3 Robot {
+  translation 0.40000007586951675 0.6500000140229353 -0.0002271270652625182
+  rotation 6.18787107723799e-05 0.9999999980814951 -2.8346159482030526e-06 0.028461209437840834
+  children [
+    DEF driver_emitter Emitter {
+      name "driver_emitter"
+      channel 3
+      allowedChannels [
+        3
+      ]
+    }
+    DEF MAIN_BODY Pose {
+      translation 0 0 0.0415
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.0820075 0.364731 0.8
+            roughness 1
+            metalness 0
+          }
+          geometry DEF BODY Cylinder {
+            height 0.08
+            radius 0.045
+          }
+        }
+      ]
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        position 13901.728089000166
+        axis 0 1 0
+        anchor 0 0 0.025
+      }
+      device [
+        RotationalMotor {
+          name "left wheel motor"
+        }
+        PositionSensor {
+          name "left wheel sensor"
+        }
+      ]
+      endPoint DEF LEFT_WHEEL Solid {
+        translation 0 0.044999999999998944 0.025
+        rotation 0 -1 0 1.6624804810795784
+        children [
+          DEF WHEEL Pose {
+            rotation -1 0 0 1.57
+            children [
+              Shape {
+                appearance PBRAppearance {
+                  baseColor 1 0 0
+                  roughness 1
+                  metalness 0
+                }
+                geometry Cylinder {
+                  height 0.01
+                  radius 0.025
+                }
+              }
+            ]
+          }
+        ]
+        name "left wheel"
+        boundingObject DEF WHEEL Pose {
+          rotation -1 0 0 1.57
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 1 0 0
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.01
+                radius 0.025
+              }
+            }
+          ]
+        }
+        physics DEF PHYSICS_WHEEL Physics {
+          density -1
+          mass 0.05
+        }
+      }
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        position 16445.67811262046
+        axis 0 1 0
+        anchor 0 0 0.025
+      }
+      device [
+        RotationalMotor {
+          name "right wheel motor"
+        }
+        PositionSensor {
+          name "right wheel sensor"
+        }
+      ]
+      endPoint DEF RIGHT_WHEEL Solid {
+        translation 0 -0.04499999999999963 0.025
+        rotation 0 1 0 4.277999038660486
+        children [
+          DEF WHEEL Pose {
+            rotation -1 0 0 1.57
+            children [
+              Shape {
+                appearance PBRAppearance {
+                  baseColor 1 0 0
+                  roughness 1
+                  metalness 0
+                }
+                geometry Cylinder {
+                  height 0.01
+                  radius 0.025
+                }
+              }
+            ]
+          }
+        ]
+        name "right wheel"
+        boundingObject USE WHEEL
+        physics DEF PHYSICS_WHEEL Physics {
+          density -1
+          mass 0.05
+        }
+      }
+    }
+    DEF LEFT_EYE DistanceSensor {
+      translation 0.042 0.02 0.063
+      rotation 0 0 -1 -0.499205
+      children [
+        DEF INFRARED Pose {
+          rotation 0.577656895078166 0.5771968951617173 -0.5771968951617173 -2.093935
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.975691 0.981481 0.0252992
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.004
+                radius 0.008
+              }
+            }
+          ]
+        }
+      ]
+      name "ds0"
+      lookupTable [
+        0 1000 0
+        0.15 500 0
+        0.3 0 0
+      ]
+      numberOfRays 2
+      aperture 1
+    }
+    DEF RIGHT_EYE DistanceSensor {
+      translation 0.042 -0.02 0.063
+      rotation 0 0 1 -0.500795
+      children [
+        DEF INFRARED Pose {
+          rotation 0.577656895078166 0.5771968951617173 -0.5771968951617173 -2.093935
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.975691 0.981481 0.0252992
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.004
+                radius 0.008
+              }
+            }
+          ]
+        }
+      ]
+      name "ds1"
+      lookupTable [
+        0 1000 0
+        0.15 500 0
+        0.3 0 0
+      ]
+      numberOfRays 2
+      aperture 1
+    }
+    Receiver {
+    }
+    Camera {
+      translation 0.045 0 0.045
+      children [
+        Pose {
+          rotation 0 -1 0 1.57
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.8 0.8 0.8
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.01
+                radius 0.007
+              }
+            }
+          ]
+        }
+      ]
+      fieldOfView 0.78
+      recognition Recognition {
+        maxRange 0.3
+      }
+    }
+  ]
+  name "robot3"
+  boundingObject DEF MYBOT_BOUNDING Pose {
+    translation 0 0 0.0415
+    children [
+      DEF BODY Cylinder {
+        height 0.08
+        radius 0.045
+      }
+    ]
+  }
+  physics DEF MYBOT_PHYSICS Physics {
+    density -1
+    mass 0.5
+  }
+  controller "slave3"
+}
+Robot {
+  children [
+    Receiver {
+      channel 4
+      allowedChannels [
+        4
+      ]
+    }
+    Receiver {
+      name "receiver2"
+      channel 2
+      allowedChannels [
+        2
+      ]
+    }
+    Receiver {
+      name "receiver3"
+      channel 3
+      allowedChannels [
+        3
+      ]
+    }
+    Emitter {
+    }
+  ]
+  name "Driver"
+  controller "driver"
+  supervisor TRUE
+}
+Robot {
+  translation 0.1 0 0.1
+  children [
+    Receiver {
+      channel 4
+      allowedChannels [
+        4
+      ]
+    }
+    Receiver {
+      name "receiver2"
+      channel 2
+      allowedChannels [
+        2
+      ]
+    }
+    Receiver {
+      name "receiver3"
+      channel 3
+      allowedChannels [
+        3
+      ]
+    }
+    Emitter {
+    }
+  ]
+  name "Driver(1)"
+  controller "eval"
+  supervisor TRUE
+}
+RectangleArena {
+  translation 1.5 2 0
+  floorSize 3 4
+  floorAppearance Parquetry {
+    type "chequered"
+    colorOverride 1 1 0.3
+  }
+}
+DEF TARGET Solid {
+  translation 0.4 3.4 0.0496076
+  rotation 0.6566688692915219 -0.223143295228849 0.7204117335925373 1.1004560449550601e-16
+  children [
+    Shape {
+      appearance Parquetry {
+        colorOverride 1 0 0
+      }
+      geometry Box {
+        size 0.1 0.1 0.1
+      }
+    }
+  ]
+  name "target"
+  boundingObject Box {
+    size 0.1 0.1 0.1
+  }
+  physics Physics {
+  }
+  recognitionColors [
+    1 0 0
+  ]
+}
+DEF TARGET2 Solid {
+  translation 2.9 3.2 0.0496076
+  rotation -0.10056677109946431 -0.7175561745586028 0.6892020465026578 1.2928331569666005e-16
+  children [
+    Shape {
+      appearance Parquetry {
+        colorOverride 1 0 0
+      }
+      geometry Box {
+        size 0.1 0.1 0.1
+      }
+    }
+  ]
+  name "target2"
+  boundingObject Box {
+    size 0.1 0.1 0.1
+  }
+  physics Physics {
+  }
+  recognitionColors [
+    1 0 0
+  ]
+}
+DEF TARGET3 Solid {
+  translation 1.9 3.4 0.049607599999999995
+  rotation -0.16810695702702808 0.3439707937366578 0.9238095821408688 7.734127038273094e-17
+  children [
+    Shape {
+      appearance Parquetry {
+        colorOverride 1 0 0
+      }
+      geometry Box {
+        size 0.1 0.1 0.1
+      }
+    }
+  ]
+  name "target3"
+  boundingObject Box {
+    size 0.1 0.1 0.1
+  }
+  physics Physics {
+  }
+  recognitionColors [
+    1 0 0
+  ]
+}
+DEF Wall Solid {
+  translation 0.7455913262873288 0.9999259705741522 0.043763126974758274
+  rotation 0.8717866412424462 -0.48612763536119036 -0.06056380345843344 0.0012255158662939978
+  children [
+    Shape {
+      appearance Parquetry {
+      }
+      geometry Box {
+        size 1.5 0.1 0.1
+      }
+    }
+  ]
+  boundingObject Box {
+    size 1.5 0.1 0.1
+  }
+  physics Physics {
+  }
+}
+DEF Wall6 Solid {
+  translation 0.12 2.51457 0.0490189
+  rotation -0.00011504323580454018 0.0002485953069587797 -0.999999962482713 0.00410150121084299
+  children [
+    Shape {
+      appearance Parquetry {
+      }
+      geometry Box {
+        size 0.25 0.1 0.1
+      }
+    }
+  ]
+  name "solid(6)"
+  boundingObject Box {
+    size 0.25 0.1 0.1
+  }
+  physics Physics {
+  }
+}
+DEF Wall2 Solid {
+  translation 1.5443005820515885 1.7004133935822086 0.04392809700649371
+  rotation 0.005602200868245392 0.00538898591101229 0.9999697866317176 1.5709141099287984
+  children [
+    Shape {
+      appearance Parquetry {
+      }
+      geometry Box {
+        size 1.5 0.1 0.1
+      }
+    }
+  ]
+  name "solid(1)"
+  boundingObject Box {
+    size 1.5 0.1 0.1
+  }
+  physics Physics {
+  }
+}
+DEF Wall5 Solid {
+  translation 0.7468758418323235 3.2450557942548808 0.04411379567090615
+  rotation -0.5772723559607177 -0.5771226919794471 0.5776556287667927 2.093717268345287
+  children [
+    Shape {
+      appearance Parquetry {
+      }
+      geometry Box {
+        size 1.5 0.1 0.1
+      }
+    }
+  ]
+  name "solid(5)"
+  boundingObject Box {
+    size 1.5 0.1 0.1
+  }
+  physics Physics {
+  }
+}
+DEF Wall8 Solid {
+  translation 2.749976180980794 3.0501416398172 0.048034471585463236
+  rotation -1.3966552993107963e-05 0.0001150008136439055 0.999999993289874 3.138910764247563
+  children [
+    Shape {
+      appearance Parquetry {
+      }
+      geometry Box {
+        size 0.5 0.1 0.1
+      }
+    }
+  ]
+  name "solid(7)"
+  boundingObject Box {
+    size 0.5 0.1 0.1
+  }
+  physics Physics {
+  }
+}
+DEF Wall7 Solid {
+  translation 2.0499989908045877 3.498386304604599 0.046076139316289184
+  rotation -4.582539800502544e-05 4.554812364612112e-05 -0.9999999979127006 1.57081441219856
+  children [
+    Shape {
+      appearance Parquetry {
+      }
+      geometry Box {
+        size 1 0.1 0.1
+      }
+    }
+  ]
+  name "solid(8)"
+  boundingObject Box {
+    size 1 0.1 0.1
+  }
+  physics Physics {
+  }
+}
+DEF Wall9 Solid {
+  translation 1.5999994530808828 3.0499999991749025 0.04686066067336367
+  rotation 0.9575216608477355 -0.2870528984231667 -0.027439069121484704 3.0641462990656103e-06
+  children [
+    Shape {
+      appearance Parquetry {
+      }
+      geometry Box {
+        size 0.8 0.1 0.1
+      }
+    }
+  ]
+  name "solid(2)"
+  boundingObject Box {
+    size 0.8 0.1 0.1
+  }
+  physics Physics {
+  }
+}
+DEF Wall3 Solid {
+  translation 2.4493568638608023 1.7200242277096909 0.04430811619152413
+  rotation 0.00044652000254991167 -0.00044519304395785236 -0.9999998012115007 1.5698355473984051
+  children [
+    Shape {
+      appearance Parquetry {
+      }
+      geometry Box {
+        size 1.45 0.1 0.1
+      }
+    }
+  ]
+  name "solid(3)"
+  boundingObject Box {
+    size 1.45 0.1 0.1
+  }
+  physics Physics {
+  }
+}
+DEF Wall4 Solid {
+  translation 2.7485762004682353 2.400027699484387 0.04804021975797406
+  rotation -0.20216050708185831 0.9665496877341085 0.15783798819518427 7.495071721971002e-05
+  children [
+    Shape {
+      appearance Parquetry {
+      }
+      geometry Box {
+        size 0.5 0.1 0.1
+      }
+    }
+  ]
+  name "solid(4)"
+  boundingObject Box {
+    size 0.5 0.1 0.1
+  }
+  physics Physics {
+  }
+}
