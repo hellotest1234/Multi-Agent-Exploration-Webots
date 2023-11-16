@@ -1,98 +1,88 @@
 #VRML_SIM R2023b utf8
-# template language: javascript
 # tags: nonDeterministic
+# template language: javascript
 
 PROTO MazeGenerator [
-  field SFInt32 mazeWidth 5
-  field SFInt32 mazeHeight 5
-  field SFFloat wallWidth 0.75
+  
+  field SFBool     enableBoundingObject TRUE
+  field SFBool     enablePhysics        TRUE
+  field SFInt32 x 3
+  field SFInt32 y 4
+  field SFInt32 max 3
+  
 ]
 {
-  %<
+
+  %< 
     import * as wbrandom from 'wbrandom.js';
-
-    function createWall(x, z, width) {
-      Transform {
-        translation x 0 z
-        children [
-          Shape {
-            appearance Appearance {
-              material Material {
-                diffuseColor 0.4 0.4 0.4
-              }
-            }
-            geometry Box {
-              size width 1 width
-            }
-          }
-        ]
-      }
-    }
-
-    function createPath(x, z, width) {
-      Transform {
-        translation x 0 z
-        children [
-          Shape {
-            appearance Appearance {
-              material Material {
-                diffuseColor 1 1 1
-              }
-            }
-            geometry Box {
-              size width 1 width
-            }
-          }
-        ]
-      }
-    }
-
-    function generateMaze(width, height, wallWidth) {
-      let maze = new Array(height);
-      for (let i = 0; i < height; i++) {
-        maze[i] = new Array(width).fill(true);
-      }
-
-      const stack = [];
-      let x = 0;
-      let z = 0;
-
-      while (true) {
-        maze[z][x] = false;
-        const neighbors = [];
-
-        if (x > 1 && maze[z][x - 2]) {
-          neighbors.push({ x: x - 2, z });
-        }
-        if (x < width - 2 && maze[z][x + 2]) {
-          neighbors.push({ x: x + 2, z });
-        }
-        if (z > 1 && maze[z - 2][x]) {
-          neighbors.push({ x, z: z - 2 });
-        }
-        if (z < height - 2 && maze[z + 2][x]) {
-          neighbors.push({ x, z: z + 2 });
-        }
-
-        if (neighbors.length === 0) {
-          if (stack.length === 0) break;
-          const prev = stack.pop();
-          x = prev.x;
-          z = prev.z;
-        } else {
-          const next = wbrandom.choice(neighbors);
-          x = next.x;
-          z = next.z;
-          stack.push({ x, z });
-          createPath(x * wallWidth, z * wallWidth, wallWidth);
-        }
-      }
-    }
-
-    let mazeWidth = fields.mazeWidth.value;
-    let mazeHeight = fields.mazeHeight.value;
-    let wallWidth = fields.wallWidth.value;
-
-    generateMaze(mazeWidth, mazeHeight, wallWidth);
+    let cells = [];
   >%
+  
+  Group {
+    %<wbrandom.seed(Date.now());>%
+    %<let x = fields.x.value; >%
+    %<let y = fields.y.value; >%
+    %<let max = fields.max.value; >%
+    children [
+      %< for (let i = 1; i < y; ++i) { >%
+        %< let size  = wbrandom.integer(2,3)/4; >%
+        %< let pos = wbrandom.integer(1,8)/4; >%
+          Pose {
+            translation %<=pos/2>%  %<=i+0.125>% 0
+            rotation 0 1 0 %<= Math.PI >%
+            children [
+              Solid{
+                children[
+                  Shape {
+                    appearance PBRAppearance {
+                    }
+                    geometry Box {
+                      size %<= pos>% 0.25 0.1
+                    }
+                    
+                  }
+                ]
+                boundingObject Box {
+                      size %<=pos>% 0.25 0.1
+                }
+                physics Physics {
+                  mass -1
+                  
+                }
+              }
+              
+            ]
+            
+          }
+          Pose {
+            translation %<= x-0.5*(x-pos-size)>% %<=i+0.125>% 0
+            rotation 0 1 0 %<= Math.PI >%
+            children [
+              Solid{
+                children[
+                  Shape {
+                    appearance PBRAppearance {
+                    }
+                    geometry Box {
+                      size %<=x-pos-size>% 0.25 0.1
+                    }
+                    
+                  }
+                ]
+                boundingObject Box {
+                      size %<=x-pos-size>% 0.25 0.1
+                }
+                physics Physics {
+                  mass -1
+                  
+                }
+              }
+              
+            ]
+            
+          }
+      %< } >%
+    ]
+    
+  }
 }
